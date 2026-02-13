@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="el">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Έχω μια ερώτηση...</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #ffe6e6; /* Απαλό ροζ background */
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden; /* Για να μην δημιουργείται scrollbar όταν πετάγεται το κουμπί */
+        }
+        h1 { 
+            color: #d63031; 
+            text-align: center; 
+            padding: 0 20px;
+        }
+        .buttons { 
+            margin-top: 30px; 
+            display: flex;
+            gap: 20px;
+            position: relative; 
+        }
+        button {
+            padding: 15px 35px;
+            font-size: 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 50px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        #yesBtn {
+            background-color: #ff7675;
+            color: white;
+        }
+        #yesBtn:hover { 
+            transform: scale(1.1); 
+            background-color: #d63031; 
+        }
+        #noBtn {
+            background-color: #b2bec3;
+            color: white;
+        }
+        #successMessage {
+            display: none;
+            font-size: 26px;
+            color: #d63031;
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="mainContainer">
+        <h1>Σάρα θα ήθελες να είσαι η Βαλεντίνα μου; ❤️</h1>
+        <div class="buttons">
+            <button id="yesBtn">ΝΑΙ!</button>
+            <button id="noBtn">Όχι</button>
+        </div>
+    </div>
+
+    <div id="successMessage">
+        <h2>Ήξερα ότι θα πεις ναι! 😍</h2>
+        <p>Ετοιμάσου, αύριο στις 8 θα πάμε το ρωμαντικό μας date για φαγητό!</p>
+    </div>
+
+    <script>
+        const noBtn = document.getElementById('noBtn');
+        const yesBtn = document.getElementById('yesBtn');
+        const mainContainer = document.getElementById('mainContainer');
+        const successMessage = document.getElementById('successMessage');
+
+        // Συνάρτηση που αλλάζει τυχαία τη θέση του "ΟΧΙ"
+        function moveButton() {
+            // Υπολογισμός νέων συντεταγμένων ώστε να μένει πάντα μέσα στην οθόνη
+            const x = Math.random() * (window.innerWidth - noBtn.offsetWidth - 20);
+            const y = Math.random() * (window.innerHeight - noBtn.offsetHeight - 20);
+            
+            noBtn.style.position = 'fixed';
+            noBtn.style.left = `${Math.max(10, x)}px`;
+            noBtn.style.top = `${Math.max(10, y)}px`;
+        }
+
+        // Event listeners για Desktop (ποντίκι) και Mobile (αφή)
+        noBtn.addEventListener('mouseenter', moveButton);
+        noBtn.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Αποτρέπει το "πάτημα" στην οθόνη αφής πριν προλάβει να φύγει
+            moveButton();
+        });
+
+        // Όταν πατήσει το "ΝΑΙ"
+        yesBtn.addEventListener('click', () => {
+            mainContainer.style.display = 'none';
+            successMessage.style.display = 'block';
+            
+            // Κώδικας για το Confetti Animation
+            let duration = 3 * 1000;
+            let end = Date.now() + duration;
+
+            (function frame() {
+                confetti({
+                    particleCount: 5,
+                    angle: 60,
+                    spread: 55,
+                    origin: { x: 0 },
+                    colors: ['#ff0000', '#ffc0cb', '#ffffff']
+                });
+                confetti({
+                    particleCount: 5,
+                    angle: 120,
+                    spread: 55,
+                    origin: { x: 1 },
+                    colors: ['#ff0000', '#ffc0cb', '#ffffff']
+                });
+
+                if (Date.now() < end) {
+                    requestAnimationFrame(frame);
+                }
+            }());
+        });
+    </script>
+</body>
+</html>
